@@ -41,9 +41,11 @@ namespace DemoServer
                 {
                     var dbContext = context.RequestServices.GetRequiredService<Database.Context>();
                     await dbContext.Database.EnsureCreatedAsync(); // TODO IDbSetup service
+
                     var content = await dbContext.TestTable.FirstOrDefaultAsync();
-                    await context.Response.WriteAsync(content.Message);
+
                     context.Response.ContentType = "text/html";
+                    await context.Response.WriteAsync(content.Message);
                 });
             });
         }
