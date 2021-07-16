@@ -1,4 +1,4 @@
-name: .NET
+name: Continuous Integration för .NET Core
 
 on:
   push:
