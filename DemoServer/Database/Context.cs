@@ -17,7 +17,9 @@ namespace DemoServer.Database
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<TestModel>().HasData(
                 new TestModel { 
-                    Message = "<h1>Testdata i en databas!</h1>" 
+                    Message = @"
+<h1>Testdata i en databas!</h1>
+<p>Updaterad via CD och testad via CI</p>" 
                 });
         }
     }
