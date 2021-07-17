@@ -34,4 +34,4 @@ jobs:
         username: ${{ secrets.SFTP_USERNAME }}
         password: ${{ secrets.SFTP_PASSWORD }}
         localPath: '~/publish'
-        remotePath: '~/publish'
+        remotePath: 'publish'
