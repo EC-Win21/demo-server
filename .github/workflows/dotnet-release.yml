@@ -25,6 +25,12 @@ jobs:
     - name: Publish
       run: dotnet publish DemoServer -c Release -p:PublishProfile=FolderProfile -o ~/publish 
       
+    - name: View Home
+      run: ls ./
+      
+    - name: View Publish Results
+      run: ls ./publish
+      
     - name: Upload Files
       id: upload
       uses: Creepios/sftp-action@v1.0.1
