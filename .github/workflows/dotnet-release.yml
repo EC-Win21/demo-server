@@ -3,8 +3,6 @@ name: Continuous Delivery ASP.NET Core
 on:
   push:
     branches: [ release ]
-  pull_request:
-    branches: [ release ]
 
 jobs:
   build:
@@ -40,4 +38,4 @@ jobs:
         username: ${{ secrets.SFTP_USERNAME }}
         password: ${{ secrets.SFTP_PASSWORD }}
         localPath: './publish'
-        remotePath: './'
+        remotePath: './publish'
