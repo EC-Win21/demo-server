@@ -23,7 +23,7 @@ jobs:
       run: dotnet restore
       
     - name: Publish
-      run: dotnet publish DemoServer -c Release -p:PublishProfile=FolderProfile -o ~/publish 
+      run: dotnet publish DemoServer -c Release -p:PublishProfile=FolderProfile -o ./publish 
       
     - name: View Home
       run: ls ./
