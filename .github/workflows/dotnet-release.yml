@@ -2,9 +2,9 @@ name: Continuous Delivery ASP.NET Core
 
 on:
   push:
-    branches: [ master ]
+    branches: [ release ]
   pull_request:
-    branches: [ master ]
+    branches: [ release ]
 
 jobs:
   build:
@@ -23,7 +23,7 @@ jobs:
       run: dotnet restore
       
     - name: Publish
-      run: dotnet publish --runtime linux-arm --self-contained true -p:PublishSingleFile=true --output ~/publish 
+      run: dotnet publish DemoServer -c Release -p:PublishProfile=FolderProfile -o ~/publish 
       
     - name: Upload Files
       id: upload
