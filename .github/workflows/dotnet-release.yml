@@ -41,13 +41,13 @@ jobs:
         SSH_HOST: ${{ secrets.SSH_HOST }}
       
     - name: Stop the server
-      run: ssh staging 'sudo systemctl stop boot_demo_server'
+      run: ssh -v staging 'sudo systemctl stop boot_demo_server'
 
     - name: Check out the source
       run: |
-        scp ./publish staging:./publish
-        ssh staging 'sudo chmod 755 -r publish'
+        scp -v -r publish staging:.
+        ssh -v staging 'sudo chmod 755 -r publish'
 
     - name: Start the server
       if: ${{ always() }}
-      run: ssh staging 'sudo systemctl start boot_demo_server'
+      run: ssh -v staging 'sudo systemctl start boot_demo_server'
