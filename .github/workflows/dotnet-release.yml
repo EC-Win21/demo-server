@@ -46,7 +46,6 @@ jobs:
     - name: Check out the source
       run: |
         scp -v -r publish staging:.
-        ssh -v staging 'sudo chmod 755 -r publish'
 
     - name: Start the server
       if: ${{ always() }}
