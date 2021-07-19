@@ -23,39 +23,31 @@ jobs:
     - name: Publish
       run: dotnet publish DemoServer -c Release -p:PublishProfile=FolderProfile -o ./publish 
       
-    - name: View Home
-      run: ls ./
+    - name: Configure SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$SSH_KEY" > ~/.ssh/staging.key
+        chmod 600 ~/.ssh/staging.key
+        cat >>~/.ssh/config <<END
+        Host staging
+          HostName $SSH_HOST
+          User $SSH_USER
+          IdentityFile ~/.ssh/staging.key
+          StrictHostKeyChecking no
+        END
+      env:
+        SSH_USER: ${{ secrets.SSH_USERNAME }}
+        SSH_KEY: ${{ secrets.SSH_KEY }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
       
-    - name: View Publish Results
-      run: ls ./publish
-      
-    - name: Stop server service
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        port: 22
-        script: sudo systemctl stop boot_demo_server
-      
-    - name: Upload Files
-      id: upload
-      uses: Creepios/sftp-action@v1.0.1
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        port: 22
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        localPath: './publish'
-        remotePath: './publish'
-        
-    - name: Start server service
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        port: 22
-        script: |
-          sudo chmod 755 -r publish
-          sudo systemctl start boot_demo_server
+    - name: Stop the server
+      run: ssh staging 'sudo systemctl stop boot_demo_server'
+
+    - name: Check out the source
+      run: |
+        scp ./publish staging:./publish
+        ssh staging 'sudo chmod 755 -r publish'
+
+    - name: Start the server
+      if: ${{ always() }}
+      run: ssh staging 'sudo systemctl start boot_demo_server'
