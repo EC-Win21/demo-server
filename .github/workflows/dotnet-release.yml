@@ -29,6 +29,15 @@ jobs:
     - name: View Publish Results
       run: ls ./publish
       
+    - name: Stop server service
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: 22
+        script: sudo systemctl stop boot_demo_server
+      
     - name: Upload Files
       id: upload
       uses: Creepios/sftp-action@v1.0.1
@@ -40,11 +49,13 @@ jobs:
         localPath: './publish'
         remotePath: './publish'
         
-    - name: Reboot server service
+    - name: Start server service
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         port: 22
-        script: sudo systemctl restart boot_demo_server
+        script: |
+          sudo chmod 755 -r publish
+          sudo systemctl start boot_demo_server
